@@ -121,7 +121,7 @@ def new_function():
         print(f"Query text for '{query}' set. Waiting a bit before clicking OK...")
         time.sleep(8)
         open_query_window.OK.click_input()
-        print(f"OK clicked for '{query}'. Waiting for criteria panel...")
+        time.sleep(3)
 
         # Marker to check if run_to_excel has been clicked
         run_to_excel_clicked = False
