@@ -51,7 +51,8 @@ def process_excel_file(file_path):
                 ws[coordinate].fill = lighter_red_fill
 
     # 2. Shift existing data in columns M and N to O and P, and create new blank columns M and N
-    ws.insert_cols(13, 2)  # Inserts two columns starting at column 13 (which is M)
+    ws.insert_cols(13, 2)  # Inserts two columns starting at column 13 (which is M), don't need to shift
+    # This line ^^ makes this it, so we create new columns where we are adding the new columns
 
     # Add headers for columns M and N
     ws.cell(row=1, column=13, value='Total Cost')
