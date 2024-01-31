@@ -92,11 +92,37 @@ def process_excel_file(file_path):
             for col in cell:
                 col.style = percentage_style
 
+    # Merge in here freeze panes and function for net bookings as dollar sign and .00 decimal point
+
     # Highlight headers in columns M, N, W, X, Y, and Z with light yellow fill
     header_cells = ['M1', 'N1', 'W1', 'X1', 'Y1', 'Z1']
     light_yellow_fill = PatternFill(start_color='FFFF99', end_color='FFFF99', fill_type='solid')
     for cell_reference in header_cells:
         ws[cell_reference].fill = light_yellow_fill
+
+        # Freeze panes at E2
+        ws.freeze_panes = 'E2'
+
+        # Assuming 'ws' is your worksheet object
+        net_bookings_col_index = None
+
+        # Locate the column with the header "Net Bookings"
+        for col in ws.iter_cols(min_row=1, max_row=1):  # Search in the first row
+            for cell in col:
+                if cell.value == 'Net Bookings':
+                    net_bookings_col_index = cell.column
+                    break
+            if net_bookings_col_index:
+                break
+
+        # Check if "Net Bookings" column was found
+        if net_bookings_col_index:
+            # Format the 'Net Bookings' column with dollar sign and two decimal places
+            for row in range(2, ws.max_row + 1):  # Start from row 2 to skip the header
+                cell = ws.cell(row=row, column=net_bookings_col_index)
+                cell.number_format = '"$"#,##0.00'
+        else:
+            print("Column 'Net Bookings' not found")
 
     # Save the modified workbook
     wb.save(file_path)
