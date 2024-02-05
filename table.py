@@ -56,6 +56,20 @@ def create_summary_table(file_path):
             net_bookings_cell.number_format = currency_format
             row_num += 1  # Increment the row counter for the next entry
 
+        # Calculate the grand total for bolded 'Name' rows
+        grand_total = 0
+        for row in ws_summary.iter_rows(min_row=2, max_col=2, max_row=ws_summary.max_row):
+            # Check if the name cell is bold, if so, add its corresponding Net Bookings to the grand total
+            if row[0].font.bold:
+                grand_total += row[1].value
+
+        # Add a grand total row at the end
+        grand_total_row = ws_summary.max_row + 1
+        ws_summary.cell(row=grand_total_row, column=1, value="Grand Total").font = Font(bold=True)
+        grand_total_cell = ws_summary.cell(row=grand_total_row, column=2, value=grand_total)
+        grand_total_cell.number_format = currency_format
+        grand_total_cell.font = Font(bold=True)  # Make the grand total bold
+
     # Auto-adjust the column width to fit the content
     for col in ws_summary.columns:
         max_length = max(len(str(cell.value)) if cell.value is not None else 0 for cell in col)
