@@ -5,12 +5,10 @@ from openpyxl.styles.numbers import FORMAT_PERCENTAGE_00
 from tkinter import messagebox
 from openpyxl.styles import NamedStyle
 from openpyxl.utils import get_column_letter
-# from openpyxl.pivot import PivotTable, TableStyleInfo, PivotCacheDefinition, PivotField
-# from pivot_table import create_pivot_table
+from table import create_summary_table
 
 
 # Sheet 1 needs to be 'Working Copy'
-
 def on_file_selected():
     file_path = select_excel_file()
     if file_path:
@@ -42,7 +40,7 @@ def process_excel_file(file_path):
     format_net_bookings_column(ws)
     add_total_net_bookings(ws)  # Call the new function to add total and highlight
     save_and_notify(file_path, wb)
-    # create_pivot_table(file_path)
+    create_summary_table(file_path)
 
 
 def add_total_net_bookings(ws):
