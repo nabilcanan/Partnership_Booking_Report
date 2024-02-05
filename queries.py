@@ -6,6 +6,7 @@ import pyautogui
 import os
 
 
+
 def log_user_activity(username):
     with open("user_activity_log.txt", "a") as log_file:  # 'a' mode ensures we're appending and not overwriting
         log_file.write(f"{username} logged in at {datetime.datetime.now()}\n")
