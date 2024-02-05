@@ -6,12 +6,13 @@ from openpyxl.styles import Font
 
 
 def create_summary_table(file_path):
-    # Load the workbook and Sheet1 into a DataFrame
+    #  -----------Load the workbook and Sheet1 into a DataFrame -----------------
     wb = load_workbook(file_path)
     if 'Working Copy' not in wb.sheetnames:
         first_sheet = wb.worksheets[0]
         first_sheet.title = 'Working Copy'
     ws = wb['Working Copy']
+    #  -----------End of Loading the workbook and Sheet1 into a DataFrame --------
 
     # Define a Font object for bold text
     bold_font = Font(bold=True)

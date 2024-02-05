@@ -26,6 +26,7 @@ def select_excel_file():
         return None
 
 
+# Logic we call when we need to execute functions in order
 def process_excel_file(file_path):
     wb = openpyxl.load_workbook(file_path)
     ws = wb.active
@@ -43,6 +44,7 @@ def process_excel_file(file_path):
     create_summary_table(file_path)
 
 
+# ---------- Add Net Booking Logic -------------------------------------------------------------
 def add_total_net_bookings(ws):
     net_bookings_col_index = None
 
@@ -56,27 +58,27 @@ def add_total_net_bookings(ws):
 
     if net_bookings_col_index:
         total_formula = f'=SUM({get_column_letter(net_bookings_col_index)}3:{get_column_letter(net_bookings_col_index)}{ws.max_row})'
-
         # Check if the style already exists, create a unique name if it does
         style_name = "currency"
         while style_name in ws.parent.named_styles:
             style_name += "_duplicate"
-
         currency_style = NamedStyle(name=style_name, number_format='"$"#,##0.00')
         ws.parent.add_named_style(currency_style)
-
         ws.cell(row=1, column=net_bookings_col_index, value=total_formula)
         ws.cell(row=1, column=net_bookings_col_index).style = currency_style
-
         # Apply the light yellow fill
         light_yellow_fill = PatternFill(start_color='FFFF99', end_color='FFFF99', fill_type='solid')
         ws.cell(row=1, column=net_bookings_col_index).fill = light_yellow_fill
+
+
+# ---------- End of Add Net Booking Logic -------------------------------------------------------------
 
 
 def shift_worksheet_down(ws):
     ws.insert_rows(1)
 
 
+# ------------------- Highlight Duplicate Values Func -------------------------------------
 def highlight_duplicate_values(ws):
     seen_values = {}
     lighter_red_fill = PatternFill(start_color='FFDDDD', end_color='FFDDDD', fill_type='solid')
@@ -97,6 +99,9 @@ def highlight_duplicate_values(ws):
                 ws[coordinate].fill = lighter_red_fill
 
 
+# -------------------  End Of Highlight Duplicate Values Func ----------------------------------
+
+# ----------------- Adding Headers to desired columns -----------------------------------------
 def add_headers_and_formulas(ws):
     ws.cell(row=2, column=13, value='Total Cost')
     ws.cell(row=2, column=14, value='GP%')
@@ -119,6 +124,9 @@ def add_headers_and_formulas(ws):
         ws[f'Y{row}'] = ws[f'I{row}'].value
 
 
+# ----------------- End Of Adding Headers to desired columns ------------------------------------
+
+# ---------------- Formatting Currency and Percentages for certain columns ---------------------
 def format_columns_as_currency_and_percentage(ws):
     currency_style = NamedStyle(name='currency', number_format='"$"#,##0.00')
     currency_columns = ['M2:M', 'N2:N', 'Z2:Z', 'Y2:Y', 'K2:K', 'L2:L', 'G2:G', 'H2:H', 'I2:I']
@@ -137,6 +145,10 @@ def format_columns_as_currency_and_percentage(ws):
                 col.style = percentage_style
 
 
+# ---------------- End of Formatting Currency and Percentages for certain columns ----------------
+
+# ---------------- Formatting Specific columns as text --------------------------------
+
 def format_specific_columns_as_text(ws, text_columns):
     for col_name in text_columns:
         col_index = None
@@ -153,6 +165,9 @@ def format_specific_columns_as_text(ws, text_columns):
             for row in range(3, ws.max_row + 1):
                 cell = ws.cell(row=row, column=col_index)
                 cell.number_format = '@'  # Format as text
+
+
+# ---------------- End of Formatting Specific columns as text ---------------------------
 
 
 def highlight_header_cells(ws):
