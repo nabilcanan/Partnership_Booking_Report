@@ -169,7 +169,7 @@ def format_specific_columns_as_text(ws, text_columns):
 
 # ---------------- End of Formatting Specific columns as text ---------------------------
 
-
+# ---------------- Highlight header cells accordingly ------------------------------------
 def highlight_header_cells(ws):
     header_cells = ['M2', 'N2', 'W2', 'X2', 'Y2', 'Z2']
     light_yellow_fill = PatternFill(start_color='FFFF99', end_color='FFFF99', fill_type='solid')
@@ -177,6 +177,8 @@ def highlight_header_cells(ws):
     for cell_reference in header_cells:
         ws[cell_reference].fill = light_yellow_fill
 
+
+# ---------------- End of Highlight header cells accordingly -------------------------------
 
 def freeze_panes(ws):
     ws.freeze_panes = 'E2'
