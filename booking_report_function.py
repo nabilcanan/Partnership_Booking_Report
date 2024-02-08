@@ -103,6 +103,10 @@ def highlight_duplicate_values(ws):
 
 # ----------------- Adding Headers to desired columns -----------------------------------------
 def add_headers_and_formulas(ws):
+
+    ws.insert_cols(13, 2)  # Need to add this line before adding new column in existing dataframes
+    # This will ensure the existing columns are overwritten
+
     ws.cell(row=2, column=13, value='Total Cost')
     ws.cell(row=2, column=14, value='GP%')
 
@@ -128,22 +132,38 @@ def add_headers_and_formulas(ws):
 
 # ---------------- Formatting Currency and Percentages for certain columns ---------------------
 def format_columns_as_currency_and_percentage(ws):
-    currency_style = NamedStyle(name='currency', number_format='"$"#,##0.00')
-    currency_columns = ['M2:M', 'N2:N', 'Z2:Z', 'Y2:Y', 'K2:K', 'L2:L', 'G2:G', 'H2:H', 'I2:I']
+    # Ensure the currency style is defined
+    currency_style_name = 'currency'
+    if currency_style_name not in ws.parent.named_styles:
+        currency_style = NamedStyle(name=currency_style_name, number_format='"$"#,##0.0000')
+        ws.parent.add_named_style(currency_style)
+    else:
+        currency_style = ws.parent.named_styles[currency_style_name]
 
-    for cell_range in currency_columns:
-        for cell in ws[cell_range + str(ws.max_row)]:
-            for col in cell:
-                col.style = currency_style
+    # Specify the columns to format as currency, including column L
+    currency_columns = ['M', 'N', 'Z', 'Y', 'K', 'L', 'G', 'H', 'I', 'X']
 
-    percentage_style = NamedStyle(name='percentage', number_format=FORMAT_PERCENTAGE_00)
-    percentage_columns = ['N2:N', 'Z2:Z']
+    # Apply the currency style to the cells in the specified columns
+    for col_letter in currency_columns:
+        for row in range(2, ws.max_row + 1):
+            ws[col_letter + str(row)].style = currency_style
 
-    for cell_range in percentage_columns:
-        for cell in ws[cell_range + str(ws.max_row)]:
-            for col in cell:
-                col.style = percentage_style
+    # Create or get the percentage style
+    percentage_style_name = 'percentage'
+    if percentage_style_name not in ws.parent.named_styles:
+        percentage_style = NamedStyle(name=percentage_style_name, number_format=FORMAT_PERCENTAGE_00)
+        ws.parent.add_named_style(percentage_style)
+    else:
+        percentage_style = ws.parent.named_styles[percentage_style_name]
 
+    # Columns to format as percentage
+    percentage_columns = ['N', 'Z']
+
+    # Apply the percentage style to the cells in the specified columns
+    for col_letter in percentage_columns:
+        for row in range(2, ws.max_row + 1):
+            cell = ws[col_letter + str(row)]
+            cell.style = percentage_style
 
 # ---------------- End of Formatting Currency and Percentages for certain columns ----------------
 
